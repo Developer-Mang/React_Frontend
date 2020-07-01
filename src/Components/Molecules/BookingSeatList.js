@@ -10,8 +10,8 @@ const screeningHallSeatInfo = {
   hallId: 0,
   maxSeat: 15,
   row: 10,
-  enter: [["Front", 0]],
-  exit: [["Back", 3]],
+  enter: [],
+  exit: [],
   except: (row, seatNum) => {
     const rowNum = row.charCodeAt() - 64;
     switch (true) {
