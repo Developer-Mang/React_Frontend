@@ -76,7 +76,7 @@ const socialDistance = (row, seatNum) => {
 };
 
 // 가까이 있는 좌석 검색 로직
-const searchNearSeat = (seatType, row, seatNum, reserved) => {
+const searchNearSeat = (seatType, row, seatNum, reserved = []) => {
   const seatInfo = setSeatInfo(seatType);
   const seatList = [];
   if (seatNum !== seatInfo.maxSeat) seatList.push(seatNum + 1);
