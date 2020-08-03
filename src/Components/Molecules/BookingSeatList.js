@@ -41,6 +41,7 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
 
   // onHover
   const hover = (e) => {
+    if (totalCount - totalSeatCount < 2) return;
     const pair = searchNearSeat(e.target.value, hallType, reserved);
     console.log(pair);
   };
