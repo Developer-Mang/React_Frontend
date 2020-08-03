@@ -105,4 +105,10 @@ const makeSeatNumArray = (maxSeat) => {
   return seatNums;
 };
 
-export { setSeatInfo, socialDistance, makeRowNameArray, makeSeatNumArray };
+export {
+  setSeatInfo,
+  socialDistance,
+  makeRowNameArray,
+  makeSeatNumArray,
+  searchNearSeat,
+};
