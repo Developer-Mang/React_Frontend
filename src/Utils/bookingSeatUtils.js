@@ -76,15 +76,27 @@ const socialDistance = (row, seatNum) => {
 };
 
 // 가까이 있는 좌석 검색 로직
-const searchNearSeat = (seatType, row, seatNum, reserved = []) => {
+const searchNearSeat = (seatName, seatType, reserved = []) => {
   const seatInfo = setSeatInfo(seatType);
-  const seatList = [];
-  if (seatNum !== seatInfo.maxSeat) seatList.push(seatNum + 1);
-  if (seatNum !== 1) seatList.push(seatNum - 1);
-  if (seatNum.length) return seatList;
-  return seatList.filter(
-    (Num) => !seatInfo.except(row, Num) && !reserved.includes(row + Num)
-  );
+  const seatNum = +seatName.slice(1);
+  const row = seatName.slice(0, 1);
+
+  const nextSeatNum = seatNum + 1;
+  if (
+    nextSeatNum <= seatInfo.maxSeat &&
+    !seatInfo.except(row, nextSeatNum) &&
+    !reserved.includes(row + nextSeatNum) &&
+    !socialDistance(row, nextSeatNum)
+  )
+    return row + nextSeatNum;
+  const preSeatNum = seatNum - 1;
+  if (
+    preSeatNum > 0 &&
+    !seatInfo.except(row, preSeatNum) &&
+    !reserved.includes(row + preSeatNum) &&
+    !socialDistance(row, preSeatNum)
+  )
+    return row + preSeatNum;
 };
 
 // 좌석 행 이름 배열 만들기 함수

@@ -12,6 +12,7 @@ import {
   socialDistance,
   makeRowNameArray,
   makeSeatNumArray,
+  searchNearSeat,
 } from "../../Utils/bookingSeatUtils";
 
 import "./style/BookingSeatList.scss";
@@ -37,6 +38,12 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
   const totalCount = Object.values(personal).reduce((p, n) => p + n, 0);
   // 선택 가능
   const selectable = totalCount - totalSeatCount > 0;
+
+  // onHover
+  const hover = (e) => {
+    const pair = searchNearSeat(e.target.value, hallType, reserved);
+    console.log(pair);
+  };
 
   // useEffect re-rendering 방지용 체크
   let checktReservedSeat = "";
@@ -88,6 +95,7 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
                   onClick={(e) => {
                     dispatch(selectSeatSaga(e.target.value));
                   }}
+                  onMouseEnter={hover}
                 >
                   {num}
                 </button>
