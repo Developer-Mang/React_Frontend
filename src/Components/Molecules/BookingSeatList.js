@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -18,6 +18,7 @@ import {
 import "./style/BookingSeatList.scss";
 
 const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
+  const seatListRef = useRef();
   const dispatch = useDispatch();
 
   const [select, personal, reserved] = useSelector((state) => [
@@ -39,11 +40,22 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
   // 선택 가능
   const selectable = totalCount - totalSeatCount > 0;
 
+  // 좌석 버튼 찾기 함수
+  const findBtn = (seatName = "") => {
+    const $seatList = seatListRef.current;
+    const $seatRow = $seatList.querySelector(
+      `li.${`row${seatName.slice(0, 1)}`}`
+    );
+    return $seatRow.querySelector(`button[value=${seatName}]`);
+  };
+
   // onHover
   const hover = (e) => {
+    if (e.target.disabled) return;
     if (totalCount - totalSeatCount < 2) return;
     const pair = searchNearSeat(e.target.value, hallType, reserved);
-    console.log(pair);
+    const seat = findBtn(pair);
+    console.log(seat);
   };
 
   // useEffect re-rendering 방지용 체크
@@ -67,9 +79,9 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
           </li>
         ))}
       </ul>
-      <ul className="seatRow">
+      <ul className="seatRow" ref={seatListRef}>
         {rowNames.map((row) => (
-          <li key={`row ${row}`}>
+          <li className={`row${row}`} key={`row ${row}`}>
             {seatNums.map((num) => {
               const booked = reserved.includes(`${row}${num}`);
               const except = setSeatInfo(hallType).except(row, num);
