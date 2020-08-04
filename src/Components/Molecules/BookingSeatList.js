@@ -58,13 +58,14 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
     // 예외 처리 (페어가 없을 시)
     if (!pair) return;
 
+    // 페어 버튼 Element 검색
     const pairBtn = findBtn(pair);
-    console.log(pairBtn);
     pairBtn.classList.add("hover");
-    e.target.mouseLeave = () => {
+
+    // mouseLeave 처리하기
+    e.target.addEventListener("mouseleave", () => {
       pairBtn.classList.remove("hover");
-      e.target.onMouseLeave = null;
-    };
+    });
   };
 
   // useEffect re-rendering 방지용 체크
