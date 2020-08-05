@@ -53,9 +53,8 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
   const hover = (e) => {
     // 예외처리 (선택 불가 or 선택 가능 인원 2명 미만)
     if (e.target.disabled || totalCount - totalSeatCount < 2) return;
-    // 페어 검색
+    // 페어 검색 후 페어 좌석이 없을시 예외처리
     const pair = searchNearSeat(e.target.value, hallType, reserved);
-    // 예외 처리 (페어가 없을 시)
     if (!pair) return;
 
     // 페어 버튼 Element 검색
@@ -66,6 +65,11 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
     e.target.addEventListener("mouseleave", () => {
       pairBtn.classList.remove("hover");
     });
+  };
+
+  // onClick
+  const click = (e) => {
+    dispatch(selectSeatSaga(e.target.value));
   };
 
   // useEffect re-rendering 방지용 체크
@@ -115,9 +119,7 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
                   disabled={
                     booked || except || social || !(selectable || selected)
                   }
-                  onClick={(e) => {
-                    dispatch(selectSeatSaga(e.target.value));
-                  }}
+                  onClick={click}
                   onMouseEnter={hover}
                 >
                   {num}
