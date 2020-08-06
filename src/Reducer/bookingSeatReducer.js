@@ -33,15 +33,10 @@ export const changePersonalCount = (type, value) => ({
   personType: type,
   value: value,
 });
-export const setSelectSeat = (seat, pair) => {
-  const selected = [seat];
-  if (pair) select.push(pair);
-
-  return {
-    type: SET_SELECTSEAT,
-    selected,
-  };
-};
+export const setSelectSeat = (seat) => ({
+  type: SET_SELECTSEAT,
+  selected: seat,
+});
 export const setRerved = (reserved) => ({
   type: SET_RESERVED,
   reserved,
@@ -66,9 +61,9 @@ export const resetThunk = (url) => (dispatch) => {
 
 function* setSelectSeatSaga(action) {
   const state = yield select();
-  const seleted = state.Seat.selectedSeat;
 
-  if (seleted.indexOf(action.seat) > -1) yield put(setSelectSeat(action.seat));
+  if (state.Seat.selectedSeat.indexOf(action.seat) > -1)
+    yield put(setSelectSeat(action.seat));
   else {
     try {
       // 로딩 처리
