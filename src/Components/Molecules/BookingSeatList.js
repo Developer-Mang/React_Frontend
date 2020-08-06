@@ -69,7 +69,13 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
 
   // onClick
   const click = (e) => {
-    dispatch(selectSeatSaga(e.target.value));
+    const selected = [e.target.value];
+    const pair =
+      totalCount - totalSeatCount >= 2 &&
+      searchNearSeat(e.target.value, hallType, reserved);
+    if (pair) selected.push(pair);
+
+    dispatch(selectSeatSaga(...selected));
   };
 
   // useEffect re-rendering 방지용 체크

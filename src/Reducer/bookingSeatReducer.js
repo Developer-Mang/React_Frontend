@@ -47,9 +47,10 @@ export const startLoading = () => ({
 export const endLoading = () => ({
   type: END_LOADING,
 });
-export const selectSeatSaga = (seat) => ({
+export const selectSeatSaga = (seat, pair) => ({
   type: SET_SELECT_SEAT_SAGA,
   seat,
+  pair,
 });
 export const setReservedSeat = () => ({
   type: SET_RESERVED_SEAT_SAGA,
