@@ -15,11 +15,20 @@ export const refreshValidation = async () => {
       }
     );
 
+    const expires = new Date();
+    expires.setDate(Date.now() + 1000 * 60 * 59);
+
     cookie.remove("accessToken", {
       path: "/",
+      maxAge: 3500,
+      expires,
+      secure: true,
     });
     cookie.save("accessToken", newAccessToken.data.access, {
       path: "/",
+      maxAge: 3500,
+      expires,
+      secure: true,
     });
 
     return true;
@@ -31,7 +40,10 @@ export const refreshValidation = async () => {
 export const isLogin = async () => {
   const accessToken = cookie.load("accessToken");
 
-  if (accessToken) return true;
+  if (accessToken) {
+    // console.log("isLogin 함수체크시 쿠키 있음");
+    return true;
+  }
 
   return await refreshValidation();
 };
@@ -67,7 +79,7 @@ export const billing = ({
   })
     .error(function (data) {
       //결제 진행시 에러가 발생하면 수행됩니다.
-      console.log("결제 에러", data);
+      // console.log("결제 에러", data);
       return data;
     })
     .cancel(function (data) {
@@ -117,13 +129,13 @@ export const billing = ({
           history.push("/booking/ticket");
         }
       } catch (e) {
-        console.log("검증에러", e.response);
+        // console.log("검증에러", e.response);
       }
     });
 };
 
 export const cancelBilling = async (id, receipt_id, price) => {
-  console.log("취소정보", id, receipt_id, price);
+  // console.log("취소정보", id, receipt_id, price);
   return axios.put(
     `
     https://www.omegabox.xyz/reservations/payments/${id}/cancel/
@@ -205,7 +217,7 @@ export const movieApi = {
           ...res.data.results,
         ];
       } catch (e) {
-        console.log(e.response);
+        // console.log(e.response);
         return {
           status: 400,
         };
