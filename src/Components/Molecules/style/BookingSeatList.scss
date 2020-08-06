@@ -80,6 +80,7 @@
       }
 
       &.select,
+      &.hover,
       &:not([ disabled ]):hover {
         background-image: $choice;
       }

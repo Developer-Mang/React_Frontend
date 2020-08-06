@@ -1,6 +1,6 @@
 # OMEGABOX 프로젝트
 
-| [![omegabox_image](https://user-images.githubusercontent.com/15887982/89106383-59679480-d464-11ea-92be-980caf43f2a8.gif)](https://www.youtube.com/watch?v=f1uahgMxjU0) |
+| [![omegabox_image](https://user-images.githubusercontent.com/15887982/89279029-d7ed4d80-d681-11ea-93de-7d3c7bf37cb3.gif)](https://www.youtube.com/watch?v=86waeamae5k) |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |                                                                  _이미지 클릭시 YouTube로 연결됩니다_                                                                  |
 
@@ -95,6 +95,14 @@ MEGABOX 홈페이지 제작을 통해 기존의 홈페이지 기능을 구현, �
 <br>
 
 ## Bugfix & Refactoring history
+
+2020-08-04 :
+
+- 메인 페이지 검색기능 제작 (유성균 [개발코드](https://github.com/OmegaBox/React_Frontend/pull/313))
+- 예매내역 취소시 취소내역 갱신이 자동으로 안되는 버그 수정 (유성균 [수정코드](https://github.com/OmegaBox/React_Frontend/pull/315))
+- cookie 만료 옵션으로 명시적인 기간을 가지게 만듦 (유성균 [수정코드](https://github.com/OmegaBox/React_Frontend/pull/318))
+- cookie 보안 옵션을 secure로 변경 (유성균 [수정코드](https://github.com/OmegaBox/React_Frontend/pull/318))
+- React프로젝트가 HTTPS로 작동되게 변경 (유성균 [수정코드](https://github.com/OmegaBox/React_Frontend/pull/318))
 
 2020-08-03 :
 

@@ -33,9 +33,9 @@ export const changePersonalCount = (type, value) => ({
   personType: type,
   value: value,
 });
-export const setSelectSeat = (seat) => ({
+export const setSelectSeat = (selected) => ({
   type: SET_SELECTSEAT,
-  selected: seat,
+  selected,
 });
 export const setRerved = (reserved) => ({
   type: SET_RESERVED,
@@ -47,9 +47,10 @@ export const startLoading = () => ({
 export const endLoading = () => ({
   type: END_LOADING,
 });
-export const selectSeatSaga = (seat) => ({
+export const selectSeatSaga = (seat, pair) => ({
   type: SET_SELECT_SEAT_SAGA,
   seat,
+  pair,
 });
 export const setReservedSeat = () => ({
   type: SET_RESERVED_SEAT_SAGA,
@@ -61,9 +62,11 @@ export const resetThunk = (url) => (dispatch) => {
 
 function* setSelectSeatSaga(action) {
   const state = yield select();
+  const selected = [action.seat];
+  if (action.pair) selected.push(action.pair);
 
-  if (state.Seat.selectedSeat.indexOf(action.seat) > -1)
-    yield put(setSelectSeat(action.seat));
+  if (selected.every((seat) => state.Seat.selectedSeat.includes(seat)))
+    yield put(setSelectSeat(selected));
   else {
     try {
       // 로딩 처리
@@ -77,13 +80,13 @@ function* setSelectSeatSaga(action) {
       yield put(endLoading());
       // 예약된 좌석이면 팝업 오픈
       if (
-        getReservation.data
-          .map((seat) => seat.reserved_seat)
-          .indexOf(action.seat) === -1
+        selected.some((seat) =>
+          getReservation.data.map((data) => data.reserved_seat).includes(seat)
+        )
       )
-        yield put(setSelectSeat(action.seat));
-      else {
         yield put(openModal("이미 선택된 좌석입니다."));
+      else {
+        yield put(setSelectSeat(selected));
       }
     } catch (e) {
       console.error(e.response);
@@ -128,10 +131,16 @@ const seatReducer = (state = initSeatState, action) => {
     case SET_SELECTSEAT:
       return {
         ...state,
-        selectedSeat:
-          state.selectedSeat.indexOf(action.selected) > -1
-            ? state.selectedSeat.filter((seat) => seat !== action.selected)
-            : [...state.selectedSeat, action.selected].sort(
+        selectedSeat: action.selected.every((seat) =>
+          state.selectedSeat.includes(seat)
+        )
+          ? state.selectedSeat.filter((seat) => !action.selected.includes(seat))
+          : [
+              ...state.selectedSeat,
+              ...action.selected.filter(
+                (seat) => !state.selectedSeat.includes(seat)
+              ),
+            ].sort(
               (a, b) =>
                 a[0].charCodeAt() - b[0].charCodeAt() ||
                 +a.slice(1) - +b.slice(1)

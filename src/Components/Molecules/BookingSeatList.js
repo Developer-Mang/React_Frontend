@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -12,11 +12,13 @@ import {
   socialDistance,
   makeRowNameArray,
   makeSeatNumArray,
+  searchNearSeat,
 } from "../../Utils/bookingSeatUtils";
 
 import "./style/BookingSeatList.scss";
 
 const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
+  const seatListRef = useRef();
   const dispatch = useDispatch();
 
   const [select, personal, reserved] = useSelector((state) => [
@@ -37,6 +39,44 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
   const totalCount = Object.values(personal).reduce((p, n) => p + n, 0);
   // 선택 가능
   const selectable = totalCount - totalSeatCount > 0;
+
+  // 좌석 버튼 찾기 함수
+  const findBtn = (seatName = "") => {
+    const $seatList = seatListRef.current;
+    const $seatRow = $seatList.querySelector(
+      `li.${`row${seatName.slice(0, 1)}`}`
+    );
+    return $seatRow.querySelector(`button[value=${seatName}]`);
+  };
+
+  // onHover
+  const hover = (e) => {
+    // 예외처리 (선택 불가 or 선택 가능 인원 2명 미만)
+    if (e.target.disabled || totalCount - totalSeatCount < 2) return;
+    // 페어 검색 후 페어 좌석이 없을시 예외처리
+    const pair = searchNearSeat(e.target.value, hallType, reserved);
+    if (!pair) return;
+
+    // 페어 버튼 Element 검색
+    const pairBtn = findBtn(pair);
+    pairBtn.classList.add("hover");
+
+    // mouseLeave 처리하기
+    e.target.addEventListener("mouseleave", () => {
+      pairBtn.classList.remove("hover");
+    });
+  };
+
+  // onClick
+  const click = (e) => {
+    const selected = [e.target.value];
+    const pair =
+      totalCount - totalSeatCount >= 2 &&
+      searchNearSeat(e.target.value, hallType, reserved);
+    if (pair) selected.push(pair);
+
+    dispatch(selectSeatSaga(...selected));
+  };
 
   // useEffect re-rendering 방지용 체크
   let checktReservedSeat = "";
@@ -59,9 +99,9 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
           </li>
         ))}
       </ul>
-      <ul className="seatRow">
+      <ul className="seatRow" ref={seatListRef}>
         {rowNames.map((row) => (
-          <li key={`row ${row}`}>
+          <li className={`row${row}`} key={`row ${row}`}>
             {seatNums.map((num) => {
               const booked = reserved.includes(`${row}${num}`);
               const except = setSeatInfo(hallType).except(row, num);
@@ -85,9 +125,8 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
                   disabled={
                     booked || except || social || !(selectable || selected)
                   }
-                  onClick={(e) => {
-                    dispatch(selectSeatSaga(e.target.value));
-                  }}
+                  onClick={click}
+                  onMouseEnter={hover}
                 >
                   {num}
                 </button>
