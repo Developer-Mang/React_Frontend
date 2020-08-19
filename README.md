@@ -157,3 +157,7 @@ MEGABOX 홈페이지 제작을 통해 기존의 홈페이지 기능을 구현, �
 
 - 무한 GPS요청 버그 수정 (유성균 [수정 코드](https://github.com/OmegaBox/React_Frontend/pull/279))
 - 메인페이지가 모바일에서 깨지는 버그 수정 (유성균 [수정 코드](https://github.com/OmegaBox/React_Frontend/pull/280))
+
+2020-08-06 :
+
+- 좌석 선택시, 동시에 2개 좌석 선택 가능하도록 기능 추가 (송치원 [수정 코드]())
