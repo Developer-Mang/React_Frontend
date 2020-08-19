@@ -53,9 +53,9 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
   const hover = (e) => {
     // 예외처리 (선택 불가 or 선택 가능 인원 2명 미만)
     if (e.target.disabled || totalCount - totalSeatCount < 2) return;
-    // 페어 검색 후 페어 좌석이 없을시 예외처리
-    const pair = searchNearSeat(e.target.value, hallType, reserved);
-    if (!pair) return;
+    // 페어 검색 후 페어 좌석이 없을거나 이미 예약된 좌석이면 예외처리
+    const pair = searchNearSeat(e.target.value, hallType);
+    if (!pair || reserved.includes(pair)) return;
 
     // 페어 버튼 Element 검색
     const pairBtn = findBtn(pair);
