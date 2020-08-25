@@ -76,7 +76,7 @@ const socialDistance = (row, seatNum) => {
 };
 
 // 가까이 있는 좌석 검색 로직
-const searchNearSeat = (seatName, seatType, reserved = []) => {
+const searchNearSeat = (seatName, seatType) => {
   const seatInfo = setSeatInfo(seatType);
   const seatNum = +seatName.slice(1);
   const row = seatName.slice(0, 1);
@@ -85,7 +85,6 @@ const searchNearSeat = (seatName, seatType, reserved = []) => {
   if (
     nextSeatNum <= seatInfo.maxSeat &&
     !seatInfo.except(row, nextSeatNum) &&
-    !reserved.includes(row + nextSeatNum) &&
     !socialDistance(row, nextSeatNum)
   )
     return row + nextSeatNum;
@@ -93,7 +92,6 @@ const searchNearSeat = (seatName, seatType, reserved = []) => {
   if (
     preSeatNum > 0 &&
     !seatInfo.except(row, preSeatNum) &&
-    !reserved.includes(row + preSeatNum) &&
     !socialDistance(row, preSeatNum)
   )
     return row + preSeatNum;
