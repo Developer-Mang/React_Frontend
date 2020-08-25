@@ -73,12 +73,10 @@ const BookingSeatList = ({ scheduleId, seatType = 0 }) => {
     // 페어 검색 조건 totalCount가 2 이상일 때
     if (totalCount >= 2) {
       const pair = searchNearSeat(e.target.value, hallType);
-
       // 이미 예약된 좌석이거나 선택 가능 좌석 수가 2 이상일 때
-      if (reserved.includes(pair) || totalCount - totalSeatCount > 1)
+      if (select.includes(pair) || totalCount - totalSeatCount > 1)
         selected.push(pair);
     }
-
     dispatch(selectSeatSaga(...selected));
   };
 
